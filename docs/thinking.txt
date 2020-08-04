@@ -1,0 +1,7 @@
+A simple command line application that accepts a text file, then prompts you for the next line from a couple options, until the file is complete.
+
+--> call the app with the path to the document
+--> show the last line, then prompt for the next line from 4 random options
+--> correct or false
+--> repeat until the document is complete
+ 
