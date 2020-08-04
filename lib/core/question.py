@@ -2,22 +2,35 @@ import random
 
 
 class Question:
-    def __init__(self, lines, index, optionCount=4):
+    def __init__(self, lines, index, printer, option_count=4, show_lines=4):
         self.lines = lines
-        self.optionCount = optionCount
+        self.option_count = option_count
+        self.printer = printer
+        self.no_shown_lines = 4
         self.index = index
         self.options = []
         self.answer = None
-        self.userAnswer = None
-        self.isAnswered = False
+        self.user_answer = None
+        self.is_answered = False
+        self.execute()
+
+    @property
+    def start_line_index(self):
+        return max(self.index - self.no_shown_lines, 0)
+
+    def print_current(self):
+        for i in range(self.start_line_index, self.index):
+            print(self.lines[i])
+        self.printer.line()
+        print('\nChoose next line', '\n')
 
     def execute(self):
         '''Creates options from the given text then asks'''
         self.answer = self.lines[self.index]
         self.options.append(self.answer)
-        allow_duplicates = len(self.lines) <= self.optionCount
+        allow_duplicates = len(self.lines) <= self.option_count
 
-        while len(self.options) < self.optionCount:
+        while len(self.options) < self.option_count:
             randomOption = random.choice(self.lines)
             if randomOption != self.answer:
                 if allow_duplicates:
@@ -28,32 +41,35 @@ class Question:
         random.shuffle(self.options)
 
     def ask(self):
-        '''Takes a question object and asks'''
+        '''Displays the question and asks for user answer'''
+        self.print_current()
+
         displayOptions = {}
         for i, x in enumerate(self.options):
             displayOptions[str(i + 1)] = x
-        
+
         result = True
-        
-        while not self.isAnswered:
-            self.displayQuestion()
-            choice = input('\nchoose an answer: ')
+
+        while not self.is_answered:
+            self.display_question()
+            choice = input('\nAnswer: ')
             if 'q' == choice:
                 result = False
-                self.isAnswered = True
+                self.is_answered = True
                 break
             if displayOptions.__contains__(choice):
-                self.isAnswered = True
-                self.userAnswer = displayOptions[choice]
+                self.is_answered = True
+                self.user_answer = displayOptions[choice]
             else:
                 print('\nInvalid option, please try again!\n')
 
         return result
 
-    def displayQuestion(self):
+    def display_question(self):
+        '''Prints the options with the numbers'''
         for i, x in enumerate(self.options):
             print(f'{i+1}: {x}')
 
-    def answeredCorrectly(self):
-        '''compares the answer with the question'''
-        return self.answer == self.userAnswer
+    def answered_correctly(self):
+        '''Compares the users answer with the questions answer'''
+        return self.answer == self.user_answer
