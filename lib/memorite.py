@@ -1,6 +1,6 @@
 #! /usr/bin/python
 # ------------------------------------------------------------#
-# Console quiz applicatoin where you get asked a series       #
+# Console quiz application where you get asked a series       #
 # of mulitple choice questions on the given text file         #
 # ------------------------------------------------------------#
 
@@ -18,14 +18,20 @@ __title__ = "Memorite"
 
 
 class App:
-    def __init__(self, text_file, no_shown_lines=4):
+    def __init__(self, text_file, **kargs):
+        print(kargs)
         self.enabled = True
-        self.no_shown_lines = no_shown_lines
+        self.num_shown_lines = kargs['lines']
+        self.num_options = kargs['options']
         self.text_file = text_file
         self.lines = None
         self.printer = None
         self.index = 0
         self.correct_count = 0
+
+    @property
+    def _complete(self):
+        return self.index == len(self.lines)
 
     def _extract_lines(self):
         '''Split text file into lines'''
@@ -34,22 +40,28 @@ class App:
             raw_text = f.read()
         self.lines = raw_text.split('\n')
 
+    def _create_new_question(self):
+        return Question(
+            lines=self.lines,
+            index=self.index,
+            printer=self.printer,
+            num_options=self.num_options,
+            num_shown_lines=self.num_shown_lines)
+
     def run(self):
-        '''Runs app on the provided file'''
+        '''The core loop of the application'''
         self._extract_lines()
         self.printer = PrettyPrint(self.lines)
 
         while(self.enabled):
             clear()
-            self.printer.header(self.correct_count, self.index)
+            self.printer.header(
+                correct=self.correct_count,
+                index=self.index)
 
-            question = Question(
-                lines=self.lines,
-                index=self.index,
-                printer=self.printer)
-            self.enabled = question.ask()
+            question = self._create_new_question()
 
-            if self.enabled:
+            if question.ask():
                 self.index += 1
                 if question.answered_correctly():
                     self.correct_count += 1
@@ -57,17 +69,27 @@ class App:
 
                 wait_for_anykey()
 
-                if self.index == len(self.lines):
+                if self._complete:
+                    clear()
                     self.printer.debrief(self.correct_count)
+                    self.printer.full_text()
                     self.enabled = False
 
             else:
                 self.printer.leave()
+                break
 
 
 if __name__ == '__main__':
-    if(len(sys.argv) < 2):
+    text_file = sys.argv[1]
+    lines = int(sys.argv[2])
+    options = int(sys.argv[3])
+
+    if text_file is None:
         print('Please call with a .txt file argument')
     else:
-        app = App(sys.argv[1])
+        app = App(
+            text_file=text_file,
+            lines=lines or 4,
+            options=options or 4)
         app.run()

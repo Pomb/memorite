@@ -2,11 +2,12 @@ import random
 
 
 class Question:
-    def __init__(self, lines, index, printer, option_count=4, show_lines=4):
+    def __init__(self, lines, index, printer,
+                 num_options=4, num_shown_lines=4):
         self.lines = lines
-        self.option_count = option_count
+        self.num_options = num_options
         self.printer = printer
-        self.no_shown_lines = 4
+        self.num_shown_lines = num_shown_lines
         self.index = index
         self.options = []
         self.answer = None
@@ -16,7 +17,7 @@ class Question:
 
     @property
     def start_line_index(self):
-        return max(self.index - self.no_shown_lines, 0)
+        return max(self.index - self.num_shown_lines, 0)
 
     def print_current(self):
         for i in range(self.start_line_index, self.index):
@@ -28,9 +29,9 @@ class Question:
         '''Creates options from the given text then asks'''
         self.answer = self.lines[self.index]
         self.options.append(self.answer)
-        allow_duplicates = len(self.lines) <= self.option_count
+        allow_duplicates = len(self.lines) <= self.num_options
 
-        while len(self.options) < self.option_count:
+        while len(self.options) < self.num_options:
             randomOption = random.choice(self.lines)
             if randomOption != self.answer:
                 if allow_duplicates:
