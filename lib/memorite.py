@@ -10,8 +10,9 @@ import random
 from core.question import Question
 from core.pretty_printer import PrettyPrint
 from core.settings import questions as settings
-from utils.input_helpers import wait_for_anykey, clear
 import core.line_splitter as line_splitter
+from core.score_keeper import ScoreKeeper
+from utils.input_helpers import wait_for_anykey, clear
 
 
 __author__ = "Paul Lombard"
@@ -26,70 +27,59 @@ class App:
         self.num_shown_lines = kargs['lines']
         self.num_options = kargs['options']
         self.text_file = text_file
-        self.lines = None
-        self.printer = None
-        self.index = 0
-        self.correct_count = 0
-
-    @property
-    def _complete(self):
-        return self.index == len(self.lines)
+        self.lines = line_splitter.extract(text_file)
+        self.printer = PrettyPrint()
+        self.score_keeper = ScoreKeeper(len(self.lines))
 
     def _create_new_question(self):
         return Question(
             lines=self.lines,
-            index=self.index,
+            index=self.score_keeper.index,
             printer=self.printer,
             num_options=self.num_options,
             num_shown_lines=self.num_shown_lines)
 
     def run(self):
         '''The core loop of the application'''
-        self.lines = line_splitter.extract(self.text_file)
-        self.printer = PrettyPrint(self.lines)
-
         while(self.enabled):
             clear()
-            self.printer.header(
-                correct=self.correct_count,
-                index=self.index)
 
+            if self.score_keeper.complete:
+                self.printer.debrief(self.score_keeper)
+                self.printer.lines(self.lines)
+                self.enabled = False
+                break
+
+            self.printer.header(self.score_keeper)
             question = self._create_new_question()
 
             if question.ask():
-                self.index += 1
-                if question.answered_correctly():
-                    self.correct_count += 1
-                self.printer.answer_statement(question.answered_correctly())
-
+                is_correct = question.answered_correctly()
+                self.score_keeper.add_score(is_correct)
+                self.printer.answer_statement(is_correct)
                 wait_for_anykey()
-
-                if self._complete:
-                    clear()
-                    self.printer.debrief(self.correct_count)
-                    self.printer.full_text()
-                    self.enabled = False
-
             else:
                 self.printer.leave()
                 break
 
 
 if __name__ == '__main__':
-    text_file = sys.argv[1]
-    lines = settings['number_show_lines']
-    options = settings['number_of_options']
     try:
+        # user defined number of lines shown
         lines = int(sys.argv[2])
+        # user defined number of answer options
         options = int(sys.argv[3])
-    except IndexError:
-        print('using defaults')
+    except:
+        # use defaults if none are provided
+        lines = settings['number_show_lines']
+        options = settings['number_of_options']
+        pass
 
-    if text_file is None:
-        print('Please call with a .txt file argument')
-    else:
-        app = App(
-            text_file=text_file,
-            lines=lines,
-            options=options)
-        app.run()
+    try:
+        if len(sys.argv) < 2:
+            raise Exception('Error! Please provide a .txt file path argument')
+        else:
+            app = App(text_file=sys.argv[1], lines=lines, options=options)
+            app.run()
+    except Exception as e:
+        print(e)
