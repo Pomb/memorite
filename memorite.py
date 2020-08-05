@@ -7,12 +7,12 @@
 import sys
 import os
 import random
-from core.question import Question
-from core.pretty_printer import PrettyPrint
-from core.settings import questions as settings
-import core.line_splitter as line_splitter
-from core.score_keeper import ScoreKeeper
-from utils.input_helpers import wait_for_anykey, clear
+from lib.core.question import Question
+from lib.core.pretty_printer import PrettyPrint
+from lib.core.settings import questions as settings
+import lib.core.line_splitter as line_splitter
+from lib.core.score_keeper import ScoreKeeper
+from lib.utils.input_helpers import wait_for_anykey, clear
 
 
 __author__ = "Paul Lombard"
