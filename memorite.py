@@ -22,7 +22,6 @@ __title__ = "Memorite"
 
 class App:
     def __init__(self, text_file, **kargs):
-        print(kargs)
         self.enabled = True
         self.num_shown_lines = kargs['lines']
         self.num_options = kargs['options']
