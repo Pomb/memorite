@@ -2,8 +2,7 @@ import random
 
 
 class Question:
-    def __init__(self, lines, index, printer,
-                 num_options=4, num_shown_lines=4):
+    def __init__(self, lines, index, printer, num_options, num_shown_lines):
         self.lines = lines
         self.num_options = num_options
         self.printer = printer

@@ -9,7 +9,9 @@ import os
 import random
 from core.question import Question
 from core.pretty_printer import PrettyPrint
+from core.settings import questions as settings
 from utils.input_helpers import wait_for_anykey, clear
+import core.line_splitter as line_splitter
 
 
 __author__ = "Paul Lombard"
@@ -33,13 +35,6 @@ class App:
     def _complete(self):
         return self.index == len(self.lines)
 
-    def _extract_lines(self):
-        '''Split text file into lines'''
-        raw_text = ''
-        with open(self.text_file, 'r') as f:
-            raw_text = f.read()
-        self.lines = raw_text.split('\n')
-
     def _create_new_question(self):
         return Question(
             lines=self.lines,
@@ -50,7 +45,7 @@ class App:
 
     def run(self):
         '''The core loop of the application'''
-        self._extract_lines()
+        self.lines = line_splitter.extract(self.text_file)
         self.printer = PrettyPrint(self.lines)
 
         while(self.enabled):
@@ -82,14 +77,19 @@ class App:
 
 if __name__ == '__main__':
     text_file = sys.argv[1]
-    lines = int(sys.argv[2])
-    options = int(sys.argv[3])
+    lines = settings['number_show_lines']
+    options = settings['number_of_options']
+    try:
+        lines = int(sys.argv[2])
+        options = int(sys.argv[3])
+    except IndexError:
+        print('using defaults')
 
     if text_file is None:
         print('Please call with a .txt file argument')
     else:
         app = App(
             text_file=text_file,
-            lines=lines or 4,
-            options=options or 4)
+            lines=lines,
+            options=options)
         app.run()
