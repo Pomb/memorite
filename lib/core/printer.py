@@ -2,7 +2,7 @@ import random
 from .settings import printing as settings
 
 
-class PrettyPrint:
+class Printer:
     def __init__(self, line_width=settings['line_width']):
         self.line_width = line_width
         self.statements = {
@@ -24,22 +24,18 @@ class PrettyPrint:
         else:
             print('Wrong! ' + random.choice(self.statements['wrong']))
 
-    def header(self, score_keeper):
-        percent = f'{score_keeper.percent}%'
-        out_of = f'{score_keeper.index + 1} of {score_keeper.total + 1}'
-        hr = percent.rjust(self.half_line_width, ' ')
+    def header(self, percent, out_of):
         hl = out_of.ljust(self.half_line_width, ' ')
+        hr = percent.rjust(self.half_line_width, ' ')
         self.split(hl, hr)
         print(''.center(self.line_width, '-'), '\n')
 
     def split(self, l, r):
         print(f'{l}{r}')
 
-    def debrief(self, score_keeper):
-        percent = f'{score_keeper.percent}%'
-        out_of = score_keeper.out_of
-        hr = percent.rjust(self.half_line_width, ' ')
+    def debrief(self, percent, out_of):
         hl = out_of.ljust(self.half_line_width, ' ')
+        hr = percent.rjust(self.half_line_width, ' ')
         self.split(hl, hr)
         self.centered('Completed')
 
@@ -55,4 +51,4 @@ class PrettyPrint:
         print('\n' + f' {text} '.center(self.line_width, '-') + '\n')
 
     def line(self, prefix=None):
-        print('_' * self.line_width, '\n')
+        return print('_' * self.line_width, '\n')

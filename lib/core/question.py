@@ -1,12 +1,14 @@
 import random
+from .printer import Printer
+from .actions import Action
 
 
 class Question:
-    def __init__(self, lines, index, printer, num_options, num_shown_lines):
+    def __init__(self, lines, index, num_options, num_shown_lines):
         self.lines = lines
         self.num_options = num_options
-        self.printer = printer
         self.num_shown_lines = num_shown_lines
+        self.printer = Printer()
         self.index = index
         self.options = []
         self.answer = None
@@ -17,6 +19,10 @@ class Question:
     @property
     def start_line_index(self):
         return max(self.index - self.num_shown_lines, 0)
+
+    @property
+    def answered_correctly(self):
+        return self.answer == self.user_answer
 
     def print_current(self):
         for i in range(self.start_line_index, self.index):
@@ -48,13 +54,13 @@ class Question:
         for i, x in enumerate(self.options):
             displayOptions[str(i + 1)] = x
 
-        result = True
+        action = Action.Continue
 
         while not self.is_answered:
             self.display_question()
             choice = input('\nAnswer: ')
             if 'q' == choice:
-                result = False
+                action = Action.Quit
                 self.is_answered = True
                 break
             if displayOptions.__contains__(choice):
@@ -63,13 +69,9 @@ class Question:
             else:
                 print('\nInvalid option, please try again!\n')
 
-        return result
+        return action
 
     def display_question(self):
         '''Prints the options with the numbers'''
         for i, x in enumerate(self.options):
             print(f'{i+1}: {x}')
-
-    def answered_correctly(self):
-        '''Compares the users answer with the questions answer'''
-        return self.answer == self.user_answer

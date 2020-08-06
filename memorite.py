@@ -7,13 +7,11 @@
 import sys
 import os
 import random
-from core.question import Question
-from core.pretty_printer import PrettyPrint
-from core.settings import questions as settings
-import core.line_splitter as line_splitter
-from core.score_keeper import ScoreKeeper
-from utils.input_helpers import wait_for_anykey, clear
-
+import lib.core.line_splitter as line_splitter
+from lib.core.printer import Printer
+from lib.core.settings import questions as settings
+from lib.core.quest_track import QuestTrack
+from lib.utils.input_helpers import wait_for_anykey, clear
 
 __author__ = "Paul Lombard"
 __version__ = "0.0.1"
@@ -22,41 +20,25 @@ __title__ = "Memorite"
 
 class App:
     def __init__(self, text_file, **kargs):
-        print(kargs)
         self.enabled = True
-        self.num_shown_lines = kargs['lines']
-        self.num_options = kargs['options']
         self.text_file = text_file
+        self.printer = Printer()
         self.lines = line_splitter.extract(text_file)
-        self.printer = PrettyPrint()
-        self.score_keeper = ScoreKeeper(len(self.lines))
-
-    def _create_new_question(self):
-        return Question(
-            lines=self.lines,
-            index=self.score_keeper.index,
-            printer=self.printer,
-            num_options=self.num_options,
-            num_shown_lines=self.num_shown_lines)
+        self.quest_track = QuestTrack(
+                            lines=self.lines,
+                            num_options=kargs['options'],
+                            num_shown_lines=kargs['lines'])
 
     def run(self):
         '''The core loop of the application'''
         while(self.enabled):
             clear()
 
-            if self.score_keeper.complete:
-                self.printer.debrief(self.score_keeper)
-                self.printer.lines(self.lines)
+            if self.quest_track.complete:
+                self.quest_track.debrief()
                 self.enabled = False
                 break
-
-            self.printer.header(self.score_keeper)
-            question = self._create_new_question()
-
-            if question.ask():
-                is_correct = question.answered_correctly()
-                self.score_keeper.add_score(is_correct)
-                self.printer.answer_statement(is_correct)
+            elif self.quest_track.next():
                 wait_for_anykey()
             else:
                 self.printer.leave()
