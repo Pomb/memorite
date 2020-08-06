@@ -1,7 +1,7 @@
 import unittest
-from lib.core.printer import Printer
+from lib.core.line_splitter import extract
 
 
 class MyTest(unittest.TestCase):
     def test(self):
-        pass
+        assert(True, True)

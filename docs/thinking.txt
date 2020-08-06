@@ -25,3 +25,11 @@ Save attempts for the text file
 
 Data choice from single file with multiple entries
 new entris denoted with by: title=This is a new entry title
+
+
+
+App
+ - Menu (Read, Learn, Test, new text file)
+ - Question track
+    - generates Question types
+    - accepts input commands to questions prompts
