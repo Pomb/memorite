@@ -1,8 +1,5 @@
 #! /usr/bin/python
-# ------------------------------------------------------------#
-# Console quiz application where you get asked a series       #
-# of mulitple choice questions on the given text file         #
-# ------------------------------------------------------------#
+
 
 import sys
 import os
@@ -12,10 +9,6 @@ from lib.core.printer import Printer
 from lib.core.settings import questions as settings
 from lib.core.quest_track import QuestTrack
 from lib.utils.input_helpers import wait_for_anykey, clear
-
-__author__ = "Paul Lombard"
-__version__ = "0.0.1"
-__title__ = "Memorite"
 
 
 class App:

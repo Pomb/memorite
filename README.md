@@ -1,10 +1,14 @@
 # memorite
 
+## Description
+A console application to aid the learning of text. 
+Given a text file, the application prompts you with a series of multiple choice questions, in order to drill the text.
+
 ### How to run
-Run application:
+Run the application:
 `python lib/memorite.py <path to txt file>`
 
-The provided text file is split into lines that are used as options in a seies of multiple choice Question & Answers until all lines of the text are completed.
+select an answer:
 `1 - 4` as input options to select the choice
 `q` to quit
 
