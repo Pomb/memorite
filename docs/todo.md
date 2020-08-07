@@ -1,6 +1,7 @@
 # Todo
 
-- [] missing line question
+- [X] choose question type when generating a question
+- [X] missing line question
 - [] missing word question
 - [] order of lines question
 - [] type next line (setting for spelling leaniancy, punctuation etc)

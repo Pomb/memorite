@@ -1,6 +1,7 @@
-from .printer import Printer
-from .actions import Action
-from core.question import Question
+import random
+from core.printer import Printer
+from core.actions import Action
+from core.question.question_factory import QuestionFactory
 
 
 class QuestTrack:
@@ -10,9 +11,11 @@ class QuestTrack:
         self.lines = lines
         self.index = 0
         self.correct = 0
-        self.num_options = num_options
-        self.num_shown_lines = num_shown_lines
         self.printer = Printer()
+        self.question_factory = QuestionFactory(
+            lines=self.lines,
+            num_options=num_options,
+            num_shown_lines=num_shown_lines)
         self.question = None
 
     @property
@@ -36,20 +39,14 @@ class QuestTrack:
     def complete(self):
         return self.index == self.total
 
-    def _create_new_question(self):
-        self.question = Question(
-            lines=self.lines,
-            index=self.index,
-            num_options=self.num_options,
-            num_shown_lines=self.num_shown_lines)
-
     def next(self):
         '''Generates and prompts the next question'''
         self.printer.header(
             percent=self.percent,
             out_of=self.out_of)
 
-        self._create_new_question()
+        self.question = self.question_factory.next(index=self.index)
+
         if self.question.ask() == Action.Continue:
             self.add_score(self.question.answered_correctly)
             self.printer.answer_statement(self.question.answered_correctly)

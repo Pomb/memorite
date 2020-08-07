@@ -1,6 +1,4 @@
 #! /usr/bin/python
-
-
 import sys
 import os
 import random
@@ -18,9 +16,9 @@ class App:
         self.printer = Printer()
         self.lines = line_splitter.extract(text_file)
         self.quest_track = QuestTrack(
-                            lines=self.lines,
-                            num_options=kargs['options'],
-                            num_shown_lines=kargs['lines'])
+            lines=self.lines,
+            num_options=kargs['options'],
+            num_shown_lines=kargs['lines'])
 
     def run(self):
         '''The core loop of the application'''
@@ -54,7 +52,10 @@ if __name__ == '__main__':
         if len(sys.argv) < 2:
             raise Exception('Error! Please provide a .txt file path argument')
         else:
-            app = App(text_file=sys.argv[1], lines=lines, options=options)
+            app = App(
+                text_file=sys.argv[1],
+                lines=lines,
+                options=options)
             app.run()
     except Exception as e:
         print(e)

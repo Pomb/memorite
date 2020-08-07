@@ -52,3 +52,7 @@ class Printer:
 
     def line(self, prefix=None):
         return print('_' * self.line_width, '\n')
+
+    def lineReplaced(self, line, pattern):
+        result = line.replace(pattern, '_')
+        print(result)

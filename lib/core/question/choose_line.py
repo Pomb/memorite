@@ -1,20 +1,21 @@
 import random
-from .printer import Printer
-from .actions import Action
+from core.printer import Printer
+from core.actions import Action
+from core.question.question import Question
 
 
-class Question:
+class ChooseLine(Question):
     def __init__(self, lines, index, num_options, num_shown_lines):
         self.lines = lines
+        self.question_text = 'Choose next line'
         self.num_options = num_options
         self.num_shown_lines = num_shown_lines
         self.printer = Printer()
         self.index = index
-        self.options = []
-        self.answer = None
+        self.answer = lines[index]
+        self.options = [self.answer]
         self.user_answer = None
         self.is_answered = False
-        self.execute()
 
     @property
     def start_line_index(self):
@@ -24,22 +25,22 @@ class Question:
     def answered_correctly(self):
         return self.answer == self.user_answer
 
-    def print_current(self):
+    @property
+    def allow_duplicates(self):
+        return len(self.lines) <= self.num_options
+
+    def print_question(self):
         for i in range(self.start_line_index, self.index):
             print(self.lines[i])
         self.printer.line()
-        print('\nChoose next line', '\n')
+        print(f'\n{self.question_text}', '\n')
 
     def execute(self):
         '''Creates options from the given text then asks'''
-        self.answer = self.lines[self.index]
-        self.options.append(self.answer)
-        allow_duplicates = len(self.lines) <= self.num_options
-
         while len(self.options) < self.num_options:
             randomOption = random.choice(self.lines)
             if randomOption != self.answer:
-                if allow_duplicates:
+                if self.allow_duplicates:
                     self.options.append(randomOption)
                 elif randomOption not in self.options:
                     self.options.append(randomOption)
@@ -48,7 +49,7 @@ class Question:
 
     def ask(self):
         '''Displays the question and asks for user answer'''
-        self.print_current()
+        self.print_question()
 
         displayOptions = {}
         for i, x in enumerate(self.options):
@@ -57,7 +58,7 @@ class Question:
         action = Action.Continue
 
         while not self.is_answered:
-            self.display_question()
+            self.print_options()
             choice = input('\nAnswer: ')
             if 'q' == choice:
                 action = Action.Quit
@@ -71,7 +72,7 @@ class Question:
 
         return action
 
-    def display_question(self):
+    def print_options(self):
         '''Prints the options with the numbers'''
         for i, x in enumerate(self.options):
             print(f'{i+1}: {x}')
