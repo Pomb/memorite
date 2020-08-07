@@ -1,6 +1,6 @@
 from .printer import Printer
 from .actions import Action
-from lib.core.question import Question
+from core.question import Question
 
 
 class QuestTrack:

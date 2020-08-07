@@ -4,11 +4,11 @@
 import sys
 import os
 import random
-import lib.core.line_splitter as line_splitter
-from lib.core.printer import Printer
-from lib.core.settings import questions as settings
-from lib.core.quest_track import QuestTrack
-from lib.utils.input_helpers import wait_for_anykey, clear
+import core.line_splitter as line_splitter
+from core.printer import Printer
+from core.settings import questions as settings
+from core.quest_track import QuestTrack
+from utils.helpers import wait_for_anykey, clear
 
 
 class App:
