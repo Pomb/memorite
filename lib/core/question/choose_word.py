@@ -7,7 +7,7 @@ from core.question.question import Question
 class ChooseWord(Question):
     def __init__(self, lines, index, num_options, num_shown_lines):
         self.lines = lines
-        self.question_text = 'Choose next word'
+        self.question_text = 'Choose next word?'
         self.num_options = num_options
         self.num_shown_lines = num_shown_lines
         self.printer = Printer()
