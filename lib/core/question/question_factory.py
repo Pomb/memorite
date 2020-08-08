@@ -20,7 +20,7 @@ class QuestionFactory:
 
     def next(self, index):
         q_type = random.choice(list(QuestionType))
-        print(q_type, '\n')
+        # print(q_type, '\n')
         if(q_type == QuestionType.ChooseLine):
             question = ChooseLine(
                 lines=self.lines,
@@ -28,7 +28,7 @@ class QuestionFactory:
                 num_options=self.num_options,
                 num_shown_lines=self.num_shown_lines)
         elif(q_type == QuestionType.ChooseWord):
-            question = ChooseLine(
+            question = ChooseWord(
                 lines=self.lines,
                 index=index,
                 num_options=self.num_options,

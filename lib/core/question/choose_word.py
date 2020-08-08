@@ -29,22 +29,31 @@ class ChooseWord(Question):
     def allow_duplicates(self):
         return sum([len(x) for x in self.lines]) > len(self.options)
 
+    def longest_word(self, words):
+        longest = ''
+        for word in words:
+            if len(word) > len(longest):
+                longest = word
+        return longest
+
     def print_question(self):
         for i in range(self.start_line_index, self.index):
             print(self.lines[i])
-        self.printer.lineReplaced(self.lines[self.index], self.answer)
+        last_line = self.lines[self.index]
+        longest_word = self.longest_word(self.options)
+        space = len(longest_word) + 1
+        q_line = last_line.replace(self.answer, '▁' * space)
+        print(q_line)
         print(f'\n{self.question_text}', '\n')
 
     def execute(self):
         '''Creates options from the given text then asks'''
 
-        self.answer = random.choice(self.lines[self.index])
-        print('answer is ' + self.answer)
+        self.answer = random.choice(self.lines[self.index].split())
         self.options.append(self.answer)
 
         while len(self.options) < self.num_options:
-            randomLine = random.choice(self.lines)
-            randomOption = random.choice(randomLine)
+            randomOption = random.choice(random.choice(self.lines).split())
             if randomOption != self.answer:
                 if self.allow_duplicates:
                     self.options.append(randomOption)

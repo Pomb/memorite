@@ -51,8 +51,8 @@ class Printer:
         print('\n' + f' {text} '.center(self.line_width, '-') + '\n')
 
     def line(self, prefix=None):
-        return print('_' * self.line_width, '\n')
+        return print('▁' * self.line_width, '\n')
 
     def lineReplaced(self, line, pattern):
-        result = line.replace(pattern, '_')
+        result = line.replace(pattern, '▁')
         print(result)
