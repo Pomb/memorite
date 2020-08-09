@@ -7,11 +7,11 @@ class Printer:
         self.line_width = line_width
         self.statements = {
             'correct': [
-                'Good going.',
-                'Yes you got it'],
+                'Keep going.',
+                'You got it.'],
             'wrong': [
-                'You answered incorrectly.',
-                "Sorry that was incorrect."]
+                'Carry on.',
+                'Sorry that is incorrect.']
         }
 
     @property
@@ -34,10 +34,8 @@ class Printer:
         print(f'{l}{r}')
 
     def debrief(self, percent, out_of):
-        hl = out_of.ljust(self.half_line_width, ' ')
-        hr = percent.rjust(self.half_line_width, ' ')
-        self.split(hl, hr)
         self.centered('Completed')
+        self.centered(percent, leading='', char=' ', trailing='\n')
 
     def lines(self, lines):
         for line in lines:
@@ -47,11 +45,11 @@ class Printer:
     def leave(self):
         self.centered('Good Bye')
 
-    def centered(self, text):
-        print('\n' + f' {text} '.center(self.line_width, '-') + '\n')
+    def centered(self, text, leading='\n', char='-', trailing=''):
+        print(leading + f' {text} '.center(self.line_width, char) + trailing)
 
     def line(self, prefix=None):
-        return print('▁' * self.line_width, '\n')
+        return print(prefix + ('▁' * self.line_width), '\n')
 
     def lineReplaced(self, line, pattern):
         result = line.replace(pattern, '▁')

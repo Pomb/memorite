@@ -8,9 +8,8 @@ from utils.helpers import clear
 class LineOrder(Question):
     def __init__(self, lines, index, num_options, num_shown_lines):
         self.lines = lines
-        self.question_text = '''Re-order the lines,
-first the number then the position to insert in the order eg:
-1 3. Which moves line 1 to position 3'''
+        self.question_text = '''Re-order the lines.
+eg: `1 3` -> Which moves line 1 to position 3'''
         self.num_options = num_options
         self.num_shown_lines = num_shown_lines
         self.printer = Printer()
@@ -28,7 +27,9 @@ first the number then the position to insert in the order eg:
         return self.options == self.answer
 
     def print_question(self):
-        print(f'\n{self.question_text}', '\n')
+        for i in range(self.start_line_index, self.index):
+            print('\t' + self.lines[i])
+        print(f'\nQ: {self.question_text}', '\n')
 
     def execute(self):
         '''Creates options from the given text then asks'''
@@ -52,35 +53,35 @@ first the number then the position to insert in the order eg:
 
     def ask(self):
         '''Displays the question and asks for user answer'''
-        action = Action.Continue
+        action = Action.Invalid
         nums = [str(i) for i in range(1, self.num_options + 1)]
 
-        while not self.is_answered:
-            self.print_question()
-            self.print_options()
+        self.print_question()
+        self.print_options()
 
-            choice = input('\nReorder to number 1: ')
-            if 'q' == choice:
-                action = Action.Quit
-                self.is_answered = True
-                break
-            elif 'a' in choice:
-                self.is_answered = True
-            else:
-                try:
-                    splits = choice.split()
-                    c_index = splits[0]
-                    c_target = splits[1]
-                    if c_index in nums and c_target in nums:
-                        index = int(c_index) - 1
-                        target = int(c_target) - 1
-                        line = self.options[index]
-                        self.options.pop(index)
-                        self.options.insert(target, line)
-                    else:
-                        raise ValueError()
-                except:
-                    print('\nInvalid option, please try again!\n')
+        choice = input('\nAnswer: ')
+        if 'q' == choice:
+            self.is_answered = True
+            action = Action.Quit
+        elif 'a' in choice:
+            self.is_answered = True
+            action = Action.Continue
+        else:
+            try:
+                splits = choice.split()
+                c_index = splits[0]
+                c_target = splits[1]
+                if c_index in nums and c_target in nums:
+                    index = int(c_index) - 1
+                    target = int(c_target) - 1
+                    line = self.options[index]
+                    self.options.pop(index)
+                    self.options.insert(target, line)
+                    action = Action.Continue
+                else:
+                    input('\nInvalid option, please type numbers!')
+            except:
+                input('\nInvalid option, please try again!')
 
         return action
 

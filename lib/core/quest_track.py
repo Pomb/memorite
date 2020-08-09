@@ -2,6 +2,7 @@ import random
 from core.printer import Printer
 from core.actions import Action
 from core.question.question_factory import QuestionFactory
+from utils.helpers import clear
 
 
 class QuestTrack:
@@ -41,19 +42,22 @@ class QuestTrack:
 
     def next(self):
         '''Generates and prompts the next question'''
-        self.printer.header(
-            percent=self.percent,
-            out_of=self.out_of)
-
         self.question = self.question_factory.next(index=self.index)
+        complete = False
 
-        if self.question.ask() == Action.Continue:
-            self.add_score(self.question.answered_correctly)
-            self.printer.answer_statement(self.question.answered_correctly)
-            self.index += 1
-            return True
-        else:
-            return False
+        while not self.question.is_answered:
+            clear()
+            self.printer.header(
+                percent=self.percent,
+                out_of=self.out_of)
+
+            if self.question.ask() == Action.Continue:
+                self.add_score(self.question.answered_correctly)
+                self.printer.answer_statement(self.question.answered_correctly)
+                self.index += 1
+                complete = True
+
+        return complete
 
     def debrief(self):
         self.printer.debrief(

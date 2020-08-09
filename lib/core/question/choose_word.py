@@ -38,13 +38,13 @@ class ChooseWord(Question):
 
     def print_question(self):
         for i in range(self.start_line_index, self.index):
-            print(self.lines[i])
+            print('\t' + self.lines[i])
         last_line = self.lines[self.index]
         longest_word = self.longest_word(self.options)
         space = len(longest_word) + 1
         q_line = last_line.replace(self.answer, '▁' * space)
-        print(q_line)
-        print(f'\n{self.question_text}', '\n')
+        print('\t' + q_line)
+        print(f'\nQ: {self.question_text}', '\n')
 
     def execute(self):
         '''Creates options from the given text then asks'''
@@ -65,25 +65,24 @@ class ChooseWord(Question):
     def ask(self):
         '''Displays the question and asks for user answer'''
         self.print_question()
+        self.print_options()
 
+        action = Action.Invalid
         displayOptions = {}
         for i, x in enumerate(self.options):
             displayOptions[str(i + 1)] = x
 
-        action = Action.Continue
-
-        while not self.is_answered:
-            self.print_options()
-            choice = input('\nAnswer: ')
-            if 'q' == choice:
-                action = Action.Quit
-                self.is_answered = True
-                break
-            if displayOptions.__contains__(choice):
-                self.is_answered = True
-                self.user_answer = displayOptions[choice]
-            else:
-                print('\nInvalid option, please try again!\n')
+        choice = input('\nAnswer: ')
+        if 'q' == choice:
+            action = Action.Quit
+            self.is_answered = True
+            action = Action.Quit
+        elif displayOptions.__contains__(choice):
+            self.is_answered = True
+            self.user_answer = displayOptions[choice]
+            action = Action.Continue
+        else:
+            print('\nInvalid option, please try again!\n')
 
         return action
 
