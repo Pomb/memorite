@@ -24,11 +24,8 @@ class Printer:
         else:
             print('Wrong! ' + random.choice(self.statements['wrong']))
 
-    def header(self, percent, out_of):
-        hl = out_of.ljust(self.half_line_width, ' ')
-        hr = percent.rjust(self.half_line_width, ' ')
-        self.split(hl, hr)
-        print(''.center(self.line_width, '-'), '\n')
+    def header(self, out_of):
+        print(out_of.center(self.line_width, '-'), '\n')
 
     def split(self, l, r):
         print(f'{l}{r}')

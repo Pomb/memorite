@@ -25,12 +25,15 @@ class QuestTrack:
 
     @property
     def out_of(self):
-        return f'{self.index}/{self.total}'
+        return f' {self.index}/{self.total} '
 
     @property
     def percent(self):
-        p = int((self.correct / self.total) * 100)
-        return f'{p}%'
+        return f'{self.percent_raw}%'
+
+    @property
+    def percent_raw(self):
+        return int((self.correct / self.total) * 100)
 
     def add_score(self, correct):
         if correct:
@@ -47,9 +50,7 @@ class QuestTrack:
 
         while not self.question.is_answered:
             clear()
-            self.printer.header(
-                percent=self.percent,
-                out_of=self.out_of)
+            self.printer.header(out_of=self.out_of)
 
             if self.question.ask() == Action.Continue:
                 self.add_score(self.question.answered_correctly)
@@ -64,3 +65,16 @@ class QuestTrack:
             percent=self.percent,
             out_of=self.out_of)
         self.printer.lines(self.lines)
+        self.printer.centered(self.get_progress_message(), leading='')
+
+    def get_progress_message(self):
+        if self.percent_raw < 50:
+            return 'Read through the text a couple times and then try again'
+        elif self.percent_raw < 75:
+            return "Oh It's not great, you need to practice more"
+        elif self.percent_raw < 90:
+            return "It's close but not close enough, try again"
+        elif self.percent_raw < 100:
+            return "You so close, You'll get it on your next attempt"
+        else:
+            return "Well done, you know this text"

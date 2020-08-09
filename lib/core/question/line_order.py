@@ -7,13 +7,12 @@ from utils.helpers import clear
 
 class LineOrder(Question):
     def __init__(self, lines, index, num_options, num_shown_lines):
-        self.lines = lines
+        super().__init__(lines, index)
         self.question_text = '''Re-order the lines.
 eg: `1 3` -> Which moves line 1 to position 3'''
         self.num_options = num_options
         self.num_shown_lines = num_shown_lines
         self.printer = Printer()
-        self.index = index
         self.answer = []
         self.options = []
         self.is_answered = False

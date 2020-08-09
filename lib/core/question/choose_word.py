@@ -6,12 +6,11 @@ from core.question.question import Question
 
 class ChooseWord(Question):
     def __init__(self, lines, index, num_options, num_shown_lines):
-        self.lines = lines
+        super().__init__(lines, index)
         self.question_text = 'Choose next word?'
         self.num_options = num_options
         self.num_shown_lines = num_shown_lines
         self.printer = Printer()
-        self.index = index
         self.answer = None
         self.options = []
         self.user_answer = None
