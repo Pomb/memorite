@@ -1,7 +1,9 @@
 import random
+import string
 from core.printer import Printer
 from core.actions import Action
 from core.question.question import Question
+from difflib import SequenceMatcher
 
 
 class TypeWord(Question):
@@ -22,7 +24,15 @@ class TypeWord(Question):
 
     @property
     def answered_correctly(self):
-        return self.answer == self.user_answer
+        s_answer = self.answer.translate(
+            str.maketrans('', '', string.punctuation))
+        s_user_answer = self.user_answer.translate(
+            str.maketrans('', '', string.punctuation))
+        accuracy = self.similar(s_answer.lower(), s_user_answer.lower())
+        return accuracy > 0.9
+
+    def similar(self, a, b):
+        return SequenceMatcher(None, a, b).ratio()
 
     def longest_word(self, words):
         longest = ''
@@ -31,12 +41,14 @@ class TypeWord(Question):
                 longest = word
         return longest
 
+    def average_word_length(self, words):
+        return int(len(''.join(words)) / len(words))
+
     def print_question(self):
         for i in range(self.start_line_index, self.index):
             print('\t' + self.lines[i])
         last_line = self.lines[self.index]
-        longest_word = self.longest_word(last_line.split())
-        space = len(longest_word) + 1
+        space = int(self.average_word_length(last_line.split()) * 1.5)
         q_line = last_line.replace(self.answer, '▁' * space)
         print('\t' + q_line)
         print(f'\nQ: {self.question_text}', '\n')
