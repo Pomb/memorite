@@ -65,7 +65,7 @@ class QuestTrack:
             percent=self.percent,
             out_of=self.out_of)
         self.printer.lines(self.lines)
-        self.printer.centered(self.get_progress_message(), leading='')
+        print(self.get_progress_message())
 
     def get_progress_message(self):
         if self.percent_raw < 50:

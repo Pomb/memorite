@@ -3,14 +3,14 @@ import random
 from core.question.choose_line import ChooseLine
 from core.question.choose_word import ChooseWord
 from core.question.line_order import LineOrder
+from core.question.type_word import TypeWord
 
 
 class QuestionType(Enum):
     ChooseLine = 0,
     ChooseWord = 1,
     LineOrder = 2,
-    # TypeWord = 3,
-    # TypeLine = 4
+    TypeWord = 3,
 
 
 class QuestionFactory:
@@ -21,6 +21,7 @@ class QuestionFactory:
 
     def next(self, index):
         q_type = random.choice(list(QuestionType))
+        # q_type = QuestionType.TypeWord
 
         if q_type == QuestionType.ChooseLine:
             question = ChooseLine(
@@ -36,6 +37,12 @@ class QuestionFactory:
                 num_shown_lines=self.num_shown_lines)
         elif q_type == QuestionType.LineOrder:
             question = LineOrder(
+                lines=self.lines,
+                index=index,
+                num_options=self.num_options,
+                num_shown_lines=self.num_shown_lines)
+        elif q_type == QuestionType.TypeWord:
+            question = TypeWord(
                 lines=self.lines,
                 index=index,
                 num_options=self.num_options,
