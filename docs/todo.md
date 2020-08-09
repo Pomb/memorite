@@ -4,7 +4,7 @@
 - [X] missing line question
 - [X] missing word question
 - [X] line order question
-- [] type missing word (setting for spelling leaniancy, punctuation etc)
+- [X] type missing word (setting for spelling leaniancy, punctuation etc)
 - [] main menu
 - [] app `test mode` vs `learn mode` mode to menu
 - [] `read` action to menu

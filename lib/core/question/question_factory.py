@@ -21,7 +21,6 @@ class QuestionFactory:
 
     def next(self, index):
         q_type = random.choice(list(QuestionType))
-        # q_type = QuestionType.TypeWord
 
         if q_type == QuestionType.ChooseLine:
             question = ChooseLine(
