@@ -52,10 +52,8 @@ if __name__ == '__main__':
         if len(sys.argv) < 2:
             raise Exception('Error! Please provide a .txt file path argument')
         else:
-            app = App(
-                text_file=sys.argv[1],
+            App(text_file=sys.argv[1],
                 lines=lines,
-                options=options)
-            app.run()
+                options=options).run()
     except Exception as e:
         print(e)
