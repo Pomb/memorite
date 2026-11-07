@@ -1,0 +1,36 @@
+# Design thoughts
+
+A simple command line application that accepts a text file,
+then prompts you for the next line from a couple options, until the file is complete.
+
+- call the app with the path to the document
+- show the last line, then prompt for the next line from 4 random options
+- correct or false
+- repeat until the document is complete
+
+============== Thoughts =================
+
+Two modes [TEST, LEARN]
+
+- TEST
+  - straight up write the text, line by line.
+  - get feedback on correct lines / words as they entered
+  - accuracy % correct words in lines
+- LEARN
+  - different types of multiple choice questions
+  - pick correct line for next line
+  - pick correct word for missing word in line
+  - order the lines
+
+Question track of X length -that satisfies the length of the lines- that randomly chooses a question type
+
+Save attempts for the text file
+
+Data choice from single file with multiple entries
+new entris denoted with by: title=This is a new entry title
+
+App
+    - Menu (Read, Learn, Test, new text file)
+    - Question track
+      - generates Question types
+      - accepts input commands to questions prompts
